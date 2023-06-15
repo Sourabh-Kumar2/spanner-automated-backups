@@ -1,0 +1,13 @@
+{
+  "name": "cloud-spanner-backup-with-tf",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "cloud spanner backup with terraform",
+  "repository": "https://github.com/Sourabh-Kumar2/spanner-automated-backups/blob/main/function/src",
+  "author": "Sourabh Kumar",
+  "private": true,
+  "dependencies": {
+    "@google-cloud/spanner": "^6.11.0"
+  }
+}
