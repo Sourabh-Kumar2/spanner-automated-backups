@@ -10,27 +10,22 @@ exports.backup = async (req, res) => {
     res.status(204).end();
 }
 
-const createBackup = async (schedulerEvent) => {
-    const instanceId = schedulerEvent.instance_id
-    const databaseId = schedulerEvent.database_id;
-    const backupId = `${databaseId}-${Date.now()}`;
-
-    const instance = spanner.instance(instanceId);
-    const database = instance.database(databaseId);
+const createBackup = async (event) => {
+    const backupId = `${event.database}-${Date.now()}`;
+    const instance = spanner.instance(event.instance);
+    const database = instance.database(event.database);
     const backup = instance.backup(backupId);
 
     try {
-        console.log(`Creating backup of database ${database.formattedName_}.`);
         const databasePath = database.formattedName_;
-        const expireTime = Date.now() + schedulerEvent.expire_hours * 60 * 60 * 1000;
-
+        const expireTime = Date.now() + event.expire * 60 * 60 * 1000;
         const [, operation] = await backup.create({
             databasePath: databasePath,
             expireTime: expireTime
         });
         console.log(`Waiting for backup ${backup.formattedName_} to complete...`);
         await operation.promise();
-        console.log(`Backup "${backup.id}" for "${databaseId}" is now ready for use.`);
+        console.log(`Backup ${backup.formattedName_} for ${event.database} is completed.`);
     } catch (err) {
         console.error('ERROR:', err);
     } finally {
