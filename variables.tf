@@ -13,3 +13,7 @@ variable "service_account_name" {
   description = "service account name"
 }
 
+variable "service_account_roles" {
+  type        = list(string)
+  description = "list of roles for service account binding"
+}
