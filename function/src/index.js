@@ -6,7 +6,7 @@ const spanner = new Spanner({
 exports.backup = async (req, res) => {
     const data = req.body ? Buffer.from(req.body, 'base64').toString() : {};
     const event = JSON.parse(data);
-    createBackup(event);
+    await createBackup(event);
     res.status(204).end();
 }
 
@@ -17,10 +17,9 @@ const createBackup = async (event) => {
     const backup = instance.backup(backupId);
 
     try {
-        const databasePath = database.formattedName_;
         const expireTime = Date.now() + event.expire * 60 * 60 * 1000;
         const [, operation] = await backup.create({
-            databasePath: databasePath,
+            databasePath: database.formattedName_,
             expireTime: expireTime
         });
         console.log(`Waiting for backup ${backup.formattedName_} to complete...`);
