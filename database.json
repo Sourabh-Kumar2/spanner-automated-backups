@@ -1,0 +1,5 @@
+{
+    "instance": "test-instance",
+    "database": "test-database",
+    "expire": 12
+}
